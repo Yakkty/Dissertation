@@ -1,0 +1,30 @@
+.list-item {
+  width: calc(45% - 2rem);
+  min-width: 17.5rem;
+  min-height: 1rem;
+  display: flex;
+  align-items: center;
+  background: #f7dbf0;
+  padding: 0 1rem 0.5rem 0.5rem;
+}
+
+.item-item__content {
+  padding: 0;
+}
+
+input:checked + p {
+  text-decoration: line-through;
+  text-decoration-color: #a683e3;
+}
+
+input[type="radio"] {
+  margin: 5px;
+}
+
+p {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 200;
+  color: #8a8a8a;
+}

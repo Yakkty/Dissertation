@@ -1,5 +1,4 @@
 .list-item {
-  width: calc(45% - 2rem);
   min-width: 17.5rem;
   min-height: 1rem;
   display: flex;
@@ -18,13 +17,26 @@ input:checked + p {
 }
 
 input[type="radio"] {
-  margin: 5px;
+  margin: 0.5rem;
 }
 
-p {
+.list-item p {
   margin: 0;
   padding: 0.5rem;
   font-size: 1.5rem;
   font-weight: 200;
   color: #8a8a8a;
+}
+
+@media (max-width: 768px) {
+  .list-item p {
+    font-size: 1rem;
+  }
+  input[type="radio"] {
+    margin: 0;
+  }
+  .list-item {
+    margin-left: auto;
+    min-width: 11rem;
+  }
 }

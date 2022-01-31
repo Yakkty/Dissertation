@@ -9,8 +9,7 @@ const TDList = (props) => {
   return (
     <div className="box">
       <div>
-        <h1 className="list-header">To Do List</h1>
-    
+        <h1>To Do List</h1>
       </div>
       <div className="list-item-box">
         <form>
@@ -20,7 +19,7 @@ const TDList = (props) => {
         </form>
         <form className="form-item__submit">
           <input type="text" placeholder="New Item"></input>
-          <button type="text" className="list-form-button">+</button>
+          <button type="text">+</button>
         </form>
       </div>
     </div>

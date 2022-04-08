@@ -14,7 +14,7 @@
 
 .post-item__image {
   width: 100%;
-  height: 12.5rem;
+  height: 20rem;
   margin-right: 1.5rem;
 }
 
@@ -28,6 +28,9 @@
 .post-item__data h2,
 .post-item__data p {
   margin: 0 0 0.5rem 0;
+}
+
+.post-item__data p {
   color: #8a8a8a;
 }
 
@@ -48,10 +51,4 @@
 .post-item__actions button,
 .post-item__actions a {
   margin: 0.5rem;
-}
-
-@media (min-width: 768px) {
-  .post-item__image {
-    height: 18rem;
-  }
 }

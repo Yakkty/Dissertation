@@ -1,17 +1,18 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import Card from "../../shared/components/UIElements/Card";
-import { AuthContext } from "../../shared/context/auth-context";
 
 import "./Auth.css";
-const Authenticate = () => {
-  const auth = useContext(AuthContext);
-
+const Signup = () => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const emailHandler = (event) => {
+    setEmail(event.target.value);
+  };
   const usernameHandler = (event) => {
     setUsername(event.target.value);
   };
@@ -22,14 +23,20 @@ const Authenticate = () => {
 
   const authSubmitHandler = (event) => {
     event.preventDefault();
-    auth.login();
-    console.log(username, password);
+    console.log(username, password, email);
   };
   return (
     <Card className="auth-form">
-      <h1>LOGIN</h1>
+      <h1>SIGNUP</h1>
       <hr></hr>
       <form onSubmit={authSubmitHandler}>
+        <Input
+          element="input"
+          id="email"
+          type="text"
+          label="E-Mail"
+          onChange={emailHandler}
+        />
         <Input
           element="input"
           id="username"
@@ -45,15 +52,13 @@ const Authenticate = () => {
           onChange={passwordHandler}
         />
         <Button type="submit" className="auth-form__actions" inverse>
-          LOGIN
+          SIGNUP
         </Button>
       </form>
-      <p>Don't have an account? Sign up instead</p>
-      <Button className="auth-form__actions" to="/signup">
-        LOGIN
-      </Button>
+      <p>Already have an account? Login instead</p>
+      <Button className="auth-form__actions" to="/auth">LOGIN</Button>
     </Card>
   );
 };
 
-export default Authenticate;
+export default Signup;

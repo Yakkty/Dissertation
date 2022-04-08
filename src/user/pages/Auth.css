@@ -1,0 +1,16 @@
+.auth-form {
+  margin: 7rem auto;
+  padding: 1.5rem 2rem 4rem 2rem;
+  width: 90%;
+  text-align: center;
+  max-width: 25rem;
+  color: #8a8a8a;
+}
+
+.auth-form__actions {
+  margin-right: 0;
+}
+
+.auth-form form {
+  margin-bottom: 1rem;
+}

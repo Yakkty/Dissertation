@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   background: #f7dbf0;
-  padding: 0 1rem 0.5rem 0.5rem;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  border-bottom: 1px solid #F9F9F9 ;
 }
 
 .item-item__content {
@@ -28,15 +29,3 @@ input[type="radio"] {
   color: #8a8a8a;
 }
 
-@media (max-width: 768px) {
-  .list-item p {
-    font-size: 1rem;
-  }
-  input[type="radio"] {
-    margin: 0;
-  }
-  .list-item {
-    margin-left: auto;
-    min-width: 11rem;
-  }
-}

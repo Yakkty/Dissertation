@@ -1,5 +1,6 @@
 import React from "react";
 
+import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import PostItem from "./PostItem";
 import "./PostList.css";
@@ -9,8 +10,8 @@ const PostList = (props) => {
     return (
       <div className="post-list center">
         <Card>
-          <h2>No Posts</h2>
-          <button>Add new</button>
+          <h2>No Posts found. Create a new one</h2>
+          <Button to="/posts/new">Add new</Button>
         </Card>
       </div>
     );

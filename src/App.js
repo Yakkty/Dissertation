@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,30 +12,78 @@ import Home from "./home/pages/Home";
 import NewPost from "./posts/pages/NewPost";
 import ToDoList from "./todolist/pages/ToDoList";
 import UserPosts from "./posts/pages/UserPosts";
+import UpdatePost from "./posts/pages/UpdatePost";
+import Authenticate from "./user/pages/Auth";
+import Signup from "./user/pages/Signup";
+import { AuthContext } from "./shared/context/auth-context";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const login = useCallback(() => {
+    setIsLoggedIn(true);
+  }, []);
+
+  const logout = useCallback(() => {
+    setIsLoggedIn(false);
+  }, []);
+
+  let routes;
+
+  if (!isLoggedIn) {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/auth" exact>
+          <Authenticate />
+        </Route>
+        <Route path="/signup" exact>
+          <Signup />
+        </Route>
+        <Route path="/signup" exact>
+          <Signup />
+        </Route>
+        <Redirect to="/" exact />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+        </Route>
+        <Route path="/:uid/posts" exact>
+          <UserPosts />
+        </Route>
+        <Route path="/posts/new" exact>
+          <NewPost />
+        </Route>
+        <Route path="/posts/:postId" exact>
+          <UpdatePost />
+        </Route>
+        <Route path="/todolist" exact>
+          <ToDoList />
+        </Route>
+        <Redirect to="/" exact />
+      </Switch>
+    );
+  }
+
   return (
-    <Router>
-      <MainNavigation />
-      <main>
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/:uid/posts" exact>
-            <UserPosts />
-          </Route>
-          <Route path="/posts/new" exact>
-            <NewPost />
-          </Route>
-          <Route path="/todolist" exact>
-            <ToDoList />
-          </Route>
-          <Redirect to="/" />
-        </Switch>
-      </main>
-    </Router>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: isLoggedIn,
+        login: login,
+        logout: logout,
+      }}
+    >
+      <Router>
+        <MainNavigation />
+        <main>{routes}</main>
+      </Router>
+    </AuthContext.Provider>
   );
 };
 

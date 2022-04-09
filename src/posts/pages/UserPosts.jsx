@@ -12,6 +12,13 @@ const DUMMY_POSTS = [
     creator: "u1",
   },
   {
+    id: "p3",
+    title: "Test Title v1",
+    description: "Test Description v1",
+    imageUrl: "https://reactjs.org/logo-og.png",
+    creator: "u1",
+  },
+  {
     id: "p2",
     title: "Test Title v2",
     description: "Test Description v2",

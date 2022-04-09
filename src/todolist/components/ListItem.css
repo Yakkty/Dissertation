@@ -1,24 +1,25 @@
 .list-item {
   min-width: 17.5rem;
   min-height: 1rem;
+
   display: flex;
   align-items: center;
   background: #f7dbf0;
   padding: 0.5rem 2rem 0.5rem 0.5rem;
-  border-bottom: 1px solid #F9F9F9 ;
+  border-bottom: 1px solid #f9f9f9;
 }
 
-.item-item__content {
+.list-item__content {
   padding: 0;
 }
 
-input:checked + p {
+.list-item input:checked + p {
   text-decoration: line-through;
   text-decoration-color: #a683e3;
 }
 
-input[type="radio"] {
-  margin: 0.5rem;
+.list-item input[type="radio"] {
+  margin: 0.5rem 0;
 }
 
 .list-item p {
@@ -28,4 +29,3 @@ input[type="radio"] {
   font-weight: 200;
   color: #8a8a8a;
 }
-

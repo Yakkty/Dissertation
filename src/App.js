@@ -15,11 +15,14 @@ import UserPosts from "./posts/pages/UserPosts";
 import UpdatePost from "./posts/pages/UpdatePost";
 import Authenticate from "./user/pages/Auth";
 import Signup from "./user/pages/Signup";
-import { AuthContext } from "./shared/context/auth-context";
+import Calendar from "./calendar/pages/Calendar";
+import Pinboard from "./pinboard/pages/Pinboard";
+import NewCalendarItem from "./calendar/pages/NewCalendarItem";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
+import { AuthContext } from "./shared/context/auth-context";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
@@ -52,8 +55,7 @@ const App = () => {
   } else {
     routes = (
       <Switch>
-        <Route path="/" exact>
-        </Route>
+        <Route path="/" exact></Route>
         <Route path="/:uid/posts" exact>
           <UserPosts />
         </Route>
@@ -63,8 +65,17 @@ const App = () => {
         <Route path="/posts/:postId" exact>
           <UpdatePost />
         </Route>
-        <Route path="/todolist" exact>
+        <Route path="/:uid/todolist" exact>
           <ToDoList />
+        </Route>
+        <Route path="/pinboard" exact>
+          <Pinboard />
+        </Route>
+        <Route path="/:uid/calendar" exact>
+          <Calendar />
+        </Route>
+        <Route path="/calendar/new" exact>
+          <NewCalendarItem />
         </Route>
         <Redirect to="/" exact />
       </Switch>

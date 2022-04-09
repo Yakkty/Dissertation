@@ -1,0 +1,30 @@
+.Calendar-card {
+  padding: 3rem 3rem 5rem 3rem;
+  margin: 2rem;
+  border-radius: 15px;
+}
+
+.Calendar-card__new {
+  width: 80%;
+  max-width: 20rem;
+  height: 100%;
+  margin: 1rem auto;
+  padding: 1rem;
+  text-align: center;
+  color: black;
+}
+
+.Calendar-card__button {
+  margin: 0;
+}
+
+.post-form {
+  list-style-type: none;
+  margin: 0 auto;
+  padding: 0.5rem 1.5rem 2rem 1.5rem;
+  width: 90%;
+  max-width: 40rem;
+  border-radius: 12.5px;
+  background: #f9f9f9;
+  color: #8a8a8a;
+}

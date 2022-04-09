@@ -8,7 +8,7 @@
   left: 0;
   background: #f9f9f9;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
-  padding: 0 1rem;
+  padding: 2.5rem 1rem 2.5rem 1rem;
   z-index: 5;
   color: #8a8a8a;
   font-family: Abel;
@@ -16,5 +16,5 @@
 }
 
 main {
-  margin-top: 7rem;
+  margin-top: 8rem;
 }

@@ -18,11 +18,13 @@ const NavLinks = (props) => {
   //Content here is displayed with the logical && operator
   return (
     <ul className="nav-links">
-      <li>
-        <NavLink to="/" exact>
-          Home
-        </NavLink>
-      </li>
+      {!auth.isLoggedIn && (
+        <li>
+          <NavLink to="/" exact>
+            Home
+          </NavLink>
+        </li>
+      )}
 
       {auth.isLoggedIn && (
         <li>
@@ -36,7 +38,7 @@ const NavLinks = (props) => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/Calendar">Calendar</NavLink>
+          <NavLink to="/u1/Calendar">Calendar</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
@@ -46,7 +48,7 @@ const NavLinks = (props) => {
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/todolist">ToDoList</NavLink>
+          <NavLink to="/u1/todolist">ToDoList</NavLink>
         </li>
       )}
       {!auth.isLoggedIn && (

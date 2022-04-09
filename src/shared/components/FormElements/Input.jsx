@@ -26,6 +26,7 @@ const Input = (props) => {
         value={props.value}
       />
     );
+
   return (
     <div className="form-control">
       <label htmlFor={props.id}>{props.label}</label>

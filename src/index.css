@@ -18,6 +18,7 @@ p {
 
 body {
   margin: 0;
+  font-size: 17px;
   /* background: #cdf0ea; */
   background: -webkit-gradient(
       linear,

@@ -1,25 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 
 import ListItem from "./ListItem";
-
 
 import "./TDList.css";
 
 const TDList = (props) => {
+  const [item, setItem] = useState("");
+
+  const itemChangeHandler = (event) => {
+    setItem(event.target.value);
+  };
+  const submitHandler = (event) => {
+    event.preventDefault();
+    console.log(item);
+  };
   return (
     <div className="box">
       <div>
         <h1>To Do List</h1>
       </div>
       <div className="list-item-box">
-        <form>
-          {props.items.map((item) => (
-            <ListItem key={item.id} id={item.id} value={item.value} />
-          ))}
-        </form>
-        <form className="form-item__submit">
-          <input type="text" placeholder="New Item"></input>
-          <button type="text">+</button>
+        {props.items.map((item) => (
+          <ListItem key={item.id} id={item.id} value={item.value} />
+        ))}
+        <form className="form-item__submit" onSubmit={submitHandler}>
+          <input
+            type="text"
+            placeholder="New Item"
+            onChange={itemChangeHandler}
+          ></input>
+          <button type="submit">+</button>
         </form>
       </div>
     </div>

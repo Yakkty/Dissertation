@@ -1,0 +1,41 @@
+.calendar-item {
+  height: 100%;
+  width: 100%;
+  padding: 0.2rem 1rem 0 1rem;
+  margin: 0;
+  color: #f9f9f9;
+  background: #f7dbf0;
+  text-shadow: 2px 2px 2px #8a8a8a;
+  font-weight: bold;
+
+}
+
+
+.calendar-item hr {
+  background: #f9f9f9;
+  color: #f9f9f9;
+  border: 0;
+  height: 1px;
+}
+
+.calendar-item__card {
+  border-radius: 0px;
+  padding: 0;
+  max-width: 27rem;
+  height: 100%;
+}
+
+.calendar-item__actions {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-item__actions input[type="checkbox"] {
+  width: 20px;
+  height: 30px;
+  background: transparent;
+  border-radius: 5px;
+  border: 2px solid black;
+}

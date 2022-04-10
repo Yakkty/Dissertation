@@ -17,7 +17,10 @@ const Modal = (props) => {
     <Fragment>
       {props.show && <BackDrop onClick={props.onCancel} />}
       <div className={`modal ${props.className}`}>
-        <header className={`modal-header ${props.headerClass}`}>
+        <header
+          className={`modal-header ${props.headerClass}`}
+          style={props.style}
+        >
           <h2>{props.header}</h2>
         </header>
         <form

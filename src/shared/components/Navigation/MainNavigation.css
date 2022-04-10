@@ -1,10 +1,11 @@
 .main-navigation__title {
   color: #8a8a8a;
   font-family: Abel;
+
 }
 
 .main-navigation__title a {
   text-decoration: none;
   color: #8a8a8a;
-  font-size: 45px;
+  font-size: 50px;
 }

@@ -1,3 +1,8 @@
+//This component is responsible for displaying a list of posts, which is dynamically set
+//This is achieved by calling the array.map method on the post data, and mapping each post in the array to
+//a child element that receives all required data and functions via props
+
+//Imports
 import React from "react";
 
 import Button from "../../shared/components/FormElements/Button";
@@ -27,6 +32,7 @@ const PostList = (props) => {
           title={post.title}
           description={post.description}
           creatorId={post.creator}
+          onDelete={props.onDeletePost}
         />
       ))}
     </ul>

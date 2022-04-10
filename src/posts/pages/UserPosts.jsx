@@ -1,4 +1,7 @@
-import React from "react";
+//This is the parent component relating to users posts
+
+//Imports
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import PostList from "../components/PostList";
@@ -28,10 +31,21 @@ const DUMMY_POSTS = [
 ];
 
 const UserPosts = () => {
+  //useState call to store posts
+  const [posts, setPosts] = useState();
+  //get user id from url parameters
   const userId = useParams().uid;
 
-  const userPosts = DUMMY_POSTS.filter(post => post.creator === userId);
-  return <PostList items={userPosts} />;
+  //Handler function for removing posts from the post data state
+  //This function is for re-rendering the ui
+  const deletePostHandler = (deletedPostId) => {
+    console.log(deletedPostId);
+  };
+
+  const userPosts = DUMMY_POSTS.filter((post) => post.creator === userId);
+
+  //This displays the post list component, passing the users posts and relevant functions to it
+  return <PostList items={userPosts} onDeletePost={deletePostHandler} />;
 };
 
 export default UserPosts;

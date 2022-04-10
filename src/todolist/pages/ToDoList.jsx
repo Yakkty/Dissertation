@@ -1,4 +1,7 @@
-import React from "react";
+//This is the parent component responsible for the To do list
+
+//Imports
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import TDList from "../components/TDList";
@@ -14,10 +17,31 @@ const ITEMS = [
   { id: "i8", value: "Eat lunch", creator: "u2" },
 ];
 
+//This component displays a child component TDList, which displays the collection of to do list items, retrieved from a database
 const ToDoList = () => {
+  //useState calls for storing new to do list items
+  const [TDItems, setTDItems] = useState(ITEMS);
+  //Gain access to the userId from the url parameters
   const userId = useParams().uid;
+
   const userItems = ITEMS.filter((item) => item.creator === userId);
-  return <TDList items={userItems} />;
+
+  const addTDItemHandler = (item) => {
+    console.log(item);
+  };
+
+  const deleteTDItemHandler = (deletedItemId) => {
+    console.log(deletedItemId);
+  };
+
+  //This returns the TDList component, passing the users items and relevant functions
+  return (
+    <TDList
+      items={userItems}
+      onDeleteItem={deleteTDItemHandler}
+      onAddItem={addTDItemHandler}
+    />
+  );
 };
 
 export default ToDoList;

@@ -2,7 +2,7 @@
 
 //imports
 import React, { Fragment, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
@@ -10,20 +10,20 @@ import Input from "../../shared/components/FormElements/Input";
 import "./PostForm.css";
 
 const DUMMY_POSTS = [
-    {
-      id: "p1",
-      title: "Test Title v1",
-      description: "Test Description v1",
-      imageUrl: "https://reactjs.org/logo-og.png",
-      creator: "u1",
-    },
-    {
-      id: "p2",
-      title: "Test Title v2",
-      description: "Test Description v2",
-      imageUrl: "https://reactjs.org/logo-og.png",
-      creator: "u2",
-    },
+  {
+    id: "p1",
+    title: "Test Title v1",
+    description: "Test Description v1",
+    imageUrl: "https://reactjs.org/logo-og.png",
+    creator: "u1",
+  },
+  {
+    id: "p2",
+    title: "Test Title v2",
+    description: "Test Description v2",
+    imageUrl: "https://reactjs.org/logo-og.png",
+    creator: "u2",
+  },
 ];
 
 //This component renders a form containing post data
@@ -36,20 +36,22 @@ const UpdatePost = () => {
   });
   //Get access to the post id from the url parameters
   const postId = useParams().postId;
+
+  const history = useHistory();
+
   const post = DUMMY_POSTS.find((p) => p.id === postId);
 
   //This useEffect call renders post data on page load
-    useEffect(() => {
-      try {
-        setPostData({
-          title: post.title,
-          description: post.description,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    }, [post.title, post.description, setPostData]);
-  
+  useEffect(() => {
+    try {
+      setPostData({
+        title: post.title,
+        description: post.description,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [post.title, post.description, setPostData]);
 
   //Display header if no post was found
   if (!postData) {
@@ -79,6 +81,9 @@ const UpdatePost = () => {
   const submitHandler = (event) => {
     //event prevent default prevents page reload on form submission
     event.preventDefault();
+
+    //Redirect user after submission
+    history.push("/u1/posts");
     console.log(postData);
   };
 

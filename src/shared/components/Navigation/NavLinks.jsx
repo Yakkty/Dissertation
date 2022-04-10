@@ -18,13 +18,11 @@ const NavLinks = (props) => {
   //Content here is displayed with the logical && operator
   return (
     <ul className="nav-links">
-      {!auth.isLoggedIn && (
-        <li>
-          <NavLink to="/" exact>
-            Home
-          </NavLink>
-        </li>
-      )}
+      <li>
+        <NavLink to="/" exact>
+          Home
+        </NavLink>
+      </li>
 
       {auth.isLoggedIn && (
         <li>

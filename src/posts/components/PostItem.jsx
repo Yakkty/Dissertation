@@ -6,13 +6,24 @@ import React from "react";
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 
+import { useHttp } from "../../shared/components/hooks/http-hook";
+
 import "./PostItem.css";
 
 const PostItem = (props) => {
+  const { sendRequest } = useHttp();
   //Handler function for deleting posts
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     //on delete function called here but executed in parent component, passing the post id as a parameter
-    props.onDelete(props.id);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/posts/${props.id}`,
+        "DELETE"
+      );
+      props.onDelete(props.id);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //This displays the markup for a post

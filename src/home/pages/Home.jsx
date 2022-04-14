@@ -35,8 +35,8 @@ const Home = () => {
             Development Project.
           </p>
           <p>
-            This is a Full Stack MERN Website designed around improving the
-            wellbeing of individuals with ADHD.
+            This is a Full Stack MERN Website designed around helping
+            individuals with ADHD.
           </p>
         </div>
         <div className="home-footer">

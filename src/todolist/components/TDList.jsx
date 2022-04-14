@@ -4,14 +4,21 @@
 //This child element then receives its required data and functions via props
 
 //Imports
-import React, { useState } from "react";
+import React, { useState, useContext, Fragment } from "react";
 
 import ListItem from "./ListItem";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+
+import { AuthContext } from "../../shared/context/auth-context";
+import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./TDList.css";
 
 //This component displays the to do list, along with a form for adding new items to the list
 const TDList = (props) => {
+  const auth = useContext(AuthContext);
+  const { sendRequest, error, clearError } = useHttp();
+
   //useState calls for storing user input
   const [item, setItem] = useState("");
 
@@ -21,44 +28,62 @@ const TDList = (props) => {
   };
 
   //This function is responsible for handling form submission
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     //prevent default stops page reload on form submission
     event.preventDefault();
 
+    try {
+      const responseData = await sendRequest(
+        "http://localhost:5000/api/todolist",
+        "POST",
+        JSON.stringify({
+          description: item,
+          creator: auth.userId,
+        }),
+        { "Content-Type": "application/json" }
+      );
+
+      props.onAddItem(responseData.TDItem);
+      setItem("");
+    } catch (err) {
+      console.log(err);
+    }
+
     //Function to store the response data. This is called here but executes in its parent component
     //The response data is passed back as an argument
-    props.onAddItem(item);
 
     //Clear user input
-    setItem("");
   };
 
   //This is the markup of the to do list component, displaying a title, individual list items and a form
   return (
-    <div className="box">
-      <div>
-        <h1>To Do List</h1>
+    <Fragment>
+      {error && <ErrorModal error={error} onClear={clearError} />}
+      <div className="box">
+        <div>
+          <h1>To Do List</h1>
+        </div>
+        <div className="list-item-box">
+          {props.items.map((item) => (
+            <ListItem
+              key={item.id}
+              id={item.id}
+              value={item.description}
+              onDelete={props.onDeleteItem}
+            />
+          ))}
+          <form className="form-item__submit" onSubmit={submitHandler}>
+            <input
+              type="text"
+              placeholder="New Item"
+              onChange={itemChangeHandler}
+              value={item}
+            ></input>
+            <button type="submit">+</button>
+          </form>
+        </div>
       </div>
-      <div className="list-item-box">
-        {props.items.map((item) => (
-          <ListItem
-            key={item.id}
-            id={item.id}
-            value={item.value}
-            onDelete={props.onDeleteItem}
-          />
-        ))}
-        <form className="form-item__submit" onSubmit={submitHandler}>
-          <input
-            type="text"
-            placeholder="New Item"
-            onChange={itemChangeHandler}
-            value={item}
-          ></input>
-          <button type="submit">+</button>
-        </form>
-      </div>
-    </div>
+    </Fragment>
   );
 };
 

@@ -1,34 +1,23 @@
 //This component is responsible for updating post data
 
 //imports
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+
+import { AuthContext } from "../../shared/context/auth-context";
+import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./PostForm.css";
-
-const DUMMY_POSTS = [
-  {
-    id: "p1",
-    title: "Test Title v1",
-    description: "Test Description v1",
-    imageUrl: "https://reactjs.org/logo-og.png",
-    creator: "u1",
-  },
-  {
-    id: "p2",
-    title: "Test Title v2",
-    description: "Test Description v2",
-    imageUrl: "https://reactjs.org/logo-og.png",
-    creator: "u2",
-  },
-];
 
 //This component renders a form containing post data
 //This component then takes user inputs to update the existing post data
 const UpdatePost = () => {
+  const auth = useContext(AuthContext);
+  const { sendRequest, error, clearError } = useHttp();
   //useState call to initialise post data
   const [postData, setPostData] = useState({
     title: "",
@@ -39,19 +28,23 @@ const UpdatePost = () => {
 
   const history = useHistory();
 
-  const post = DUMMY_POSTS.find((p) => p.id === postId);
-
   //This useEffect call renders post data on page load
   useEffect(() => {
-    try {
-      setPostData({
-        title: post.title,
-        description: post.description,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }, [post.title, post.description, setPostData]);
+    const fetchPost = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/posts/${postId}`
+        );
+        setPostData({
+          title: responseData.post.title,
+          description: responseData.post.description,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPost();
+  }, [sendRequest, postId]);
 
   //Display header if no post was found
   if (!postData) {
@@ -78,13 +71,24 @@ const UpdatePost = () => {
   };
 
   //Form submission function
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     //event prevent default prevents page reload on form submission
     event.preventDefault();
-
-    //Redirect user after submission
-    history.push("/u1/posts");
-    console.log(postData);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/posts/${postId}`,
+        "PATCH",
+        JSON.stringify({
+          title: postData.title,
+          description: postData.description,
+        }),
+        { "Content-Type": "application/json" }
+      );
+      //Redirect user after submission
+      history.push(`/${auth.userId}/posts`);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //HTML markup of the form, consisting of two inputs
@@ -92,6 +96,7 @@ const UpdatePost = () => {
   //This is known as two way binding
   return (
     <Fragment>
+      {error && <ErrorModal error={error} onClear={clearError} />}
       {postData && (
         <form className="post-form" onSubmit={submitHandler}>
           <Input

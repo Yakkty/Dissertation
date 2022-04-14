@@ -1,51 +1,50 @@
 //This is the parent component relating to users posts
 
 //Imports
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 
 import PostList from "../components/PostList";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
-const DUMMY_POSTS = [
-  {
-    id: "p1",
-    title: "Test Title v1",
-    description: "Test Description v1",
-    imageUrl: "https://reactjs.org/logo-og.png",
-    creator: "u1",
-  },
-  {
-    id: "p3",
-    title: "Test Title v1",
-    description: "Test Description v1",
-    imageUrl: "https://reactjs.org/logo-og.png",
-    creator: "u1",
-  },
-  {
-    id: "p2",
-    title: "Test Title v2",
-    description: "Test Description v2",
-    imageUrl: "https://reactjs.org/logo-og.png",
-    creator: "u2",
-  },
-];
+import { useHttp } from "../../shared/components/hooks/http-hook";
 
 const UserPosts = () => {
+  const { sendRequest, error, clearError } = useHttp();
   //useState call to store posts
   const [posts, setPosts] = useState();
   //get user id from url parameters
   const userId = useParams().uid;
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/posts/user/${userId}`
+        );
+        setPosts(responseData.userPosts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPosts();
+  }, [sendRequest, userId]);
+
   //Handler function for removing posts from the post data state
   //This function is for re-rendering the ui
   const deletePostHandler = (deletedPostId) => {
-    console.log(deletedPostId);
+    setPosts((prevPosts) =>
+      prevPosts.filter((post) => post.id !== deletedPostId)
+    );
   };
 
-  const userPosts = DUMMY_POSTS.filter((post) => post.creator === userId);
-
   //This displays the post list component, passing the users posts and relevant functions to it
-  return <PostList items={userPosts} onDeletePost={deletePostHandler} />;
+  return (
+    <Fragment>
+      {error && <ErrorModal error={error} onClear={clearError} />}
+      {posts && <PostList items={posts} onDeletePost={deletePostHandler} />}
+    </Fragment>
+  );
 };
 
 export default UserPosts;

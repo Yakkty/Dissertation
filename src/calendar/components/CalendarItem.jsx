@@ -5,13 +5,24 @@ import { Grid } from "@mui/material";
 
 import Card from "../../shared/components/UIElements/Card";
 
+import { useHttp } from "../../shared/components/hooks/http-hook";
+
 import "./CalendarItem.css";
 
 //This component
 const CalendarItem = (props) => {
-  const confirmDeleteHandler = () => {
-    //on delete function called here but executed in parent component, passing the item id as a parameter
-    props.onDelete(props.id);
+  const { sendRequest } = useHttp();
+  const confirmDeleteHandler = async () => {
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/calendar/${props.id}`,
+        "DELETE"
+      );
+      //on delete function called here but executed in parent component, passing the item id as a parameter
+      props.onDelete(props.id);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //This displays the markup for a calendar item

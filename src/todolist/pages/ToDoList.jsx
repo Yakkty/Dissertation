@@ -1,46 +1,65 @@
 //This is the parent component responsible for the To do list
 
 //Imports
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 
 import TDList from "../components/TDList";
 
-const ITEMS = [
-  { id: "i1", value: "Service car", creator: "u1" },
-  { id: "i2", value: "Fix sink", creator: "u1" },
-  { id: "i3", value: "Service car", creator: "u1" },
-  { id: "i4", value: "Fix sink", creator: "u1" },
-  { id: "i5", value: "Service car", creator: "u1" },
-  { id: "i6", value: "Fix sink", creator: "u1" },
-  { id: "i7", value: "Cut grass", creator: "u2" },
-  { id: "i8", value: "Eat lunch", creator: "u2" },
-];
+import { useHttp } from "../../shared/components/hooks/http-hook";
 
 //This component displays a child component TDList, which displays the collection of to do list items, retrieved from a database
 const ToDoList = () => {
+  const { sendRequest } = useHttp();
   //useState calls for storing new to do list items
-  const [TDItems, setTDItems] = useState(ITEMS);
+  const [TDItems, setTDItems] = useState([
+    {
+      description: "Add new items!",
+    },
+  ]);
   //Gain access to the userId from the url parameters
   const userId = useParams().uid;
 
-  const userItems = ITEMS.filter((item) => item.creator === userId);
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/todolist/user/${userId}`
+        );
+        setTDItems(responseData.usertdItems);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchItems();
+  }, [sendRequest, userId, TDItems]);
 
-  const addTDItemHandler = (item) => {
-    console.log(item);
+  //This handler function is to add td items to the pre existing td items state
+  //This is dependent on the previous items snapshot, which we gain access to from the spread operator
+  //We then return an updated state snapshot including the new td item and the previous items
+  const addTDItemHandler = (TDItems) => {
+    setTDItems((prevItems) => {
+      return [...prevItems, TDItems];
+    });
   };
 
   const deleteTDItemHandler = (deletedItemId) => {
-    console.log(deletedItemId);
+    setTDItems((prevItems) =>
+      prevItems.filter((item) => item.id !== deletedItemId)
+    );
   };
 
   //This returns the TDList component, passing the users items and relevant functions
   return (
-    <TDList
-      items={userItems}
-      onDeleteItem={deleteTDItemHandler}
-      onAddItem={addTDItemHandler}
-    />
+    <Fragment>
+      {TDItems && (
+        <TDList
+          items={TDItems}
+          onDeleteItem={deleteTDItemHandler}
+          onAddItem={addTDItemHandler}
+        />
+      )}
+    </Fragment>
   );
 };
 

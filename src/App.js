@@ -28,17 +28,20 @@ import { AuthContext } from "./shared/context/auth-context";
 const App = () => {
   //useState calls for a users authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(false);
 
   //Login function. This function binds a token to a user which is then used to gain access to the rest of the application
   //useCallback is called here to prevent recreation of the login function, empty dependancies means itll only render once.
-  const login = useCallback(() => {
+  const login = useCallback((uid) => {
     setIsLoggedIn(true);
+    setUserId(uid);
   }, []);
 
   //Logout function to log a user out. This removes the authentication token from the user
   //useCallback also used here to prevent recreation on componnent re-renders. Same logic as for Login
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setUserId(null);
   }, []);
 
   //This section is focused on routing for the page using react-router-dom
@@ -106,6 +109,7 @@ const App = () => {
     <AuthContext.Provider
       value={{
         isLoggedIn: isLoggedIn,
+        userId: userId,
         login: login,
         logout: logout,
       }}

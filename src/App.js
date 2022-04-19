@@ -2,7 +2,7 @@
 //This page is responsible for managing authentication state and routing
 
 //Imports
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -13,17 +13,31 @@ import {
 import "./App.css";
 
 import Home from "./home/pages/Home";
-import NewPost from "./posts/pages/NewPost";
-import ToDoList from "./todolist/pages/ToDoList";
-import UserPosts from "./posts/pages/UserPosts";
-import UpdatePost from "./posts/pages/UpdatePost";
-import Authenticate from "./user/pages/Auth";
-import Signup from "./user/pages/Signup";
-import Calendar from "./calendar/pages/Calendar";
-import Pinboard from "./pinboard/pages/Pinboard";
-import NewCalendarItem from "./calendar/pages/NewCalendarItem";
+// import NewPost from "./posts/pages/NewPost";
+// import ToDoList from "./todolist/pages/ToDoList";
+// import UserPosts from "./posts/pages/UserPosts";
+// import UpdatePost from "./posts/pages/UpdatePost";
+// import Authenticate from "./user/pages/Auth";
+// import Signup from "./user/pages/Signup";
+// import Calendar from "./calendar/pages/Calendar";
+// import Pinboard from "./pinboard/pages/Pinboard";
+// import NewCalendarItem from "./calendar/pages/NewCalendarItem";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
+
+//Changing imports to improve page performance - code splitting
+//React lazy will download pages when they are reached rather than on initial page load
+const Calendar = React.lazy(() => import("./calendar/pages/Calendar"));
+const NewCalendarItem = React.lazy(() =>
+  import("./calendar/pages/NewCalendarItem")
+);
+const Pinboard = React.lazy(() => import("./pinboard/pages/Pinboard"));
+const ToDoList = React.lazy(() => import("./todolist/pages/ToDoList"));
+const UserPosts = React.lazy(() => import("./posts/pages/UserPosts"));
+const UpdatePost = React.lazy(() => import("./posts/pages/UpdatePost"));
+const NewPost = React.lazy(() => import("./posts/pages/NewPost"));
+const Authenticate = React.lazy(() => import("./user/pages/Auth"));
+const Signup = React.lazy(() => import("./user/pages/Signup"));
 
 let logoutTimer;
 
@@ -163,6 +177,7 @@ const App = () => {
   //The context provider is used here to pass this authentication state to every child component
   //The provider wrapper wraps the entire website in this case, resulting in the entire website having access to the context
   //This context consists of a token, userId and login/logout functions
+  //Wrap routes with Suspense for this page load code splitting to work
   return (
     <AuthContext.Provider
       value={{
@@ -175,7 +190,17 @@ const App = () => {
     >
       <Router>
         <MainNavigation />
-        <main>{routes}</main>
+        <main>
+          <Suspense
+            fallback={
+              <div className="center">
+                <h2>Page Loading</h2>
+              </div>
+            }
+          >
+            {routes}
+          </Suspense>
+        </main>
       </Router>
     </AuthContext.Provider>
   );

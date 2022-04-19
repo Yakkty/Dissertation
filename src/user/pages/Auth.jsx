@@ -45,7 +45,7 @@ const Authenticate = () => {
       //Call custom http hook method sendrequest to send a POST http request to our rest api backend
       //This function requires a url, which is the url the backend expects, along with the request method, which is a POST request
       const responseData = await sendRequest(
-        "http://localhost:5000/api/users/login",
+        process.env.REACT_APP_API_URL + "/users/login",
         "POST",
         //This converts strings to JSON,
         JSON.stringify({

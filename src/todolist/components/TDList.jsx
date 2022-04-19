@@ -34,7 +34,7 @@ const TDList = (props) => {
 
     try {
       const responseData = await sendRequest(
-        "http://localhost:5000/api/todolist",
+        process.env.REACT_APP_API_URL + "/todolist",
         "POST",
         JSON.stringify({
           description: item,

@@ -33,7 +33,7 @@ const UpdatePost = () => {
     const fetchPost = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/posts/${postId}`
+          `${process.env.REACT_APP_API_URL}/posts/${postId}`
         );
         setPostData({
           title: responseData.post.title,
@@ -76,7 +76,7 @@ const UpdatePost = () => {
     event.preventDefault();
     try {
       await sendRequest(
-        `http://localhost:5000/api/posts/${postId}`,
+        `${process.env.REACT_APP_API_URL}/posts/${postId}`,
         "PATCH",
         JSON.stringify({
           title: postData.title,

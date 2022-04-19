@@ -19,7 +19,7 @@ const PostItem = (props) => {
     //on delete function called here but executed in parent component, passing the post id as a parameter
     try {
       await sendRequest(
-        `http://localhost:5000/api/posts/${props.id}`,
+        `${process.env.REACT_APP_API_URL}/posts/${props.id}`,
         "DELETE",
         null,
         {
@@ -40,7 +40,10 @@ const PostItem = (props) => {
     <li className="post-item">
       <Card className="post-item__content">
         <div className="post-item__image">
-          <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
+          <img
+            src={`${process.env.REACT_APP_ASSET_URL}/${props.image}`}
+            alt={props.title}
+          />
         </div>
         <div className="post-item__data">
           <h2>{props.title}</h2>

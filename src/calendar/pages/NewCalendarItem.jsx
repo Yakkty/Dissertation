@@ -51,7 +51,7 @@ const NewCalendarItem = () => {
     event.preventDefault();
     try {
       await sendRequest(
-        "http://localhost:5000/api/calendar",
+        process.env.REACT_APP_API_URL + "/calendar",
         "POST",
         JSON.stringify({
           title: enteredTitle,

@@ -17,7 +17,7 @@ const ListItem = (props) => {
   const deleteItemHandler = async () => {
     try {
       await sendRequest(
-        `http://localhost:5000/api/todolist/${props.id}`,
+        `${process.env.REACT_APP_API_URL}/todolist/${props.id}`,
         "DELETE",
         null,
         {

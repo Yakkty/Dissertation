@@ -22,7 +22,7 @@ const UserPosts = () => {
     const fetchPosts = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/posts/user/${userId}`
+          `${process.env.REACT_APP_API_URL}/posts/user/${userId}`
         );
         setPosts(responseData.userPosts);
       } catch (err) {

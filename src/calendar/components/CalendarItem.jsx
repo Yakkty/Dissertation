@@ -18,7 +18,7 @@ const CalendarItem = (props) => {
   const confirmDeleteHandler = async () => {
     try {
       await sendRequest(
-        `http://localhost:5000/api/calendar/${props.id}`,
+        `${process.env.REACT_APP_API_URL}/calendar/${props.id}`,
         "DELETE",
         null,
         {

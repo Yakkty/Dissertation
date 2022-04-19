@@ -26,7 +26,7 @@ const Calendar = () => {
     const fetchItems = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/calendar/user/${userId}`
+          `${process.env.REACT_APP_API_URL}/calendar/user/${userId}`
         );
         setItems(responseData.userCalendarItems);
       } catch (err) {

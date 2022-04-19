@@ -59,9 +59,14 @@ const NewPost = () => {
       formData.append("description", enteredDescription);
       formData.append("image", enteredImage.value);
       formData.append("creator", auth.userId);
-      await sendRequest("http://localhost:5000/api/posts", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await sendRequest(
+        process.env.REACT_APP_API_URL + "/posts",
+        "POST",
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       //Redirect user after submission
       history.push(`/${auth.userId}/posts`);
     } catch (err) {

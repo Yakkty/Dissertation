@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
 import { AuthContext } from "../../shared/context/auth-context";
@@ -22,6 +23,10 @@ const NewPost = () => {
   //useState calls for storing user inputs into state
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredDescription, setEnteredDescription] = useState("");
+  const [enteredImage, setEnteredImage] = useState({
+    id: "",
+    value: null,
+  });
 
   //hook for redirecting users on form submission
   const history = useHistory();
@@ -35,26 +40,34 @@ const NewPost = () => {
     setEnteredDescription(event.target.value);
   };
 
+  const fileInputHandler = (file) => {
+    setEnteredImage({
+      id: file.id,
+      value: file.value,
+    });
+    console.log(file);
+  };
+
   //This function is responsible for handling form submission
   const submitHandler = async (event) => {
     //prevent default stops page reload on form submission
     event.preventDefault();
 
     try {
-      await sendRequest(
-        "http://localhost:5000/api/posts",
-        "POST",
-        JSON.stringify({
-          title: enteredTitle,
-          description: enteredDescription,
-          creator: auth.userId,
-        }),
-        { "Content-Type": "application/json" }
-      );
+      const formData = new FormData();
+      formData.append("title", enteredTitle);
+      formData.append("description", enteredDescription);
+      formData.append("image", enteredImage.value);
+      formData.append("creator", auth.userId);
+      await sendRequest("http://localhost:5000/api/posts", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       //Redirect user after submission
       history.push(`/${auth.userId}/posts`);
     } catch (err) {
       console.log(err);
+      console.log(enteredImage);
+      console.log(enteredDescription);
     }
   };
 
@@ -78,6 +91,7 @@ const NewPost = () => {
           onChange={descriptionInputHandler}
           value={enteredDescription}
         />
+        <ImageUpload id="image" onInput={fileInputHandler} />
 
         <Button type="submit">Register</Button>
       </form>

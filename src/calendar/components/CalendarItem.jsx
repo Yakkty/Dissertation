@@ -1,22 +1,29 @@
 //This component displays an individual calendar item to be displayed in the calendar grid
 
 //Imports
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 
 import Card from "../../shared/components/UIElements/Card";
 
+import { AuthContext } from "../../shared/context/auth-context";
 import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./CalendarItem.css";
 
 //This component
 const CalendarItem = (props) => {
+  const auth = useContext(AuthContext);
   const { sendRequest } = useHttp();
   const confirmDeleteHandler = async () => {
     try {
       await sendRequest(
         `http://localhost:5000/api/calendar/${props.id}`,
-        "DELETE"
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       //on delete function called here but executed in parent component, passing the item id as a parameter
       props.onDelete(props.id);

@@ -82,7 +82,10 @@ const UpdatePost = () => {
           title: postData.title,
           description: postData.description,
         }),
-        { "Content-Type": "application/json" }
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
       );
       //Redirect user after submission
       history.push(`/${auth.userId}/posts`);

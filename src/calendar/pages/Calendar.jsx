@@ -9,7 +9,7 @@ import Button from "../../shared/components/FormElements/Button";
 import CalendarList from "../components/CalendarList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
-import { AuthContext } from "../../shared/context/auth-context";
+// import { AuthContext } from "../../shared/context/auth-context";
 import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./Calendar.css";
@@ -45,7 +45,7 @@ const Calendar = () => {
 
   return (
     <Fragment>
-      {error && <ErrorModal error={error} onClear={clearError} />}
+      {error && items && <ErrorModal error={error} onClear={clearError} />}
       {items && (
         <Card className="Calendar-card">
           <CalendarList items={items} onDeleteItem={deleteItemHandler} />

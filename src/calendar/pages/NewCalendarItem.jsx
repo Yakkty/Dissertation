@@ -60,7 +60,10 @@ const NewCalendarItem = () => {
           time: enteredTime,
           creator: auth.userId,
         }),
-        { "Content-Type": "application/json" }
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
       );
       //Redirect user after submission
       history.push(`/${auth.userId}/calendar`);

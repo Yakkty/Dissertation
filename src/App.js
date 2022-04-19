@@ -2,7 +2,7 @@
 //This page is responsible for managing authentication state and routing
 
 //Imports
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -25,24 +25,82 @@ import NewCalendarItem from "./calendar/pages/NewCalendarItem";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 
+let logoutTimer;
+
 const App = () => {
   //useState calls for a users authentication state
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(false);
+  const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [userId, setUserId] = useState(false);
 
-  //Login function. This function binds a token to a user which is then used to gain access to the rest of the application
-  //useCallback is called here to prevent recreation of the login function, empty dependancies means itll only render once.
-  const login = useCallback((uid) => {
-    setIsLoggedIn(true);
+  //Login function. This function binds a token to a user which is used to gain access to the rest of the application
+  //useCallback is utilised here so the login function doesn't recreate on component re-renders
+  const login = useCallback((uid, token, expirationDate) => {
+    //Storing the token and user id in state
+    setToken(token);
     setUserId(uid);
+
+    //Create an expiration time one hour from token creation or set it to existing expiration date
+    const tokenExpiration =
+      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+    //Setting the expiration date in state
+    setTokenExpirationDate(tokenExpiration);
+    //Storing the authentication token and expiration in local storage
+    //This allows users to stay logged in for a duration, without having to login on every page reload
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({
+        userId: uid,
+        token: token,
+        expiration: tokenExpiration.toISOString(),
+      })
+    );
   }, []);
 
-  //Logout function to log a user out. This removes the authentication token from the user
-  //useCallback also used here to prevent recreation on componnent re-renders. Same logic as for Login
+  //Logout function to log a user out. This removes the authentication token from the user and removes the expiration timer
+  //along with removing the user data from local storage
+  //Logout is also in a usecallback hook to prevent it being recreated on component re-renders
   const logout = useCallback(() => {
-    setIsLoggedIn(false);
+    setToken(null);
+    setTokenExpirationDate(null);
     setUserId(null);
+    localStorage.removeItem("userData");
   }, []);
+
+  //This function is used to calculate the expiration time of the token, and automatically log a user out once when the time is up
+  //Checking if a token exists (the user has logged in) along with there being an expiration date
+  //This function will run once on page render, and any time the token, logout function or token expiration date changes
+  useEffect(() => {
+    if (token && tokenExpirationDate) {
+      const tokenDuration =
+        tokenExpirationDate.getTime() - new Date().getTime();
+      logoutTimer = setTimeout(logout, tokenDuration);
+    } else {
+      //Clear the timer if there is no token or expiration date
+      clearTimeout(logoutTimer);
+    }
+  }, [token, logout, tokenExpirationDate]);
+
+  //This useEffect call is what will automatically log a user in
+  //if the storage data has a valid token and valid token expiration timer
+  //This will only be called on the pages initial render, and whenever login changes
+  useEffect(() => {
+    //Parse the data from local storage
+    const storageData = JSON.parse(localStorage.getItem("userData"));
+    if (
+      storageData &&
+      storageData.token &&
+      //Token is valid if expiration date is in the future still
+      new Date(storageData.expiration) > new Date()
+    ) {
+      //Login function call
+      login(
+        storageData.userId,
+        storageData.token,
+        new Date(storageData.expiration)
+      );
+    }
+  }, [login]);
 
   //This section is focused on routing for the page using react-router-dom
   //Page content will rerender depending on the provided url path
@@ -50,7 +108,7 @@ const App = () => {
 
   //If checks for a users authentication status
   //Route availability is dependent on a users authenticated status
-  if (!isLoggedIn) {
+  if (!token) {
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -108,7 +166,8 @@ const App = () => {
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn: isLoggedIn,
+        isLoggedIn: !!token,
+        token: token,
         userId: userId,
         login: login,
         logout: logout,

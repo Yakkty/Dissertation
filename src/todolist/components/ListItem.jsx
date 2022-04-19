@@ -1,8 +1,9 @@
 //This is the child component to TDList, which displays an individual list item in the to do list
 
 //Imports
-import React from "react";
+import React, { useContext } from "react";
 
+import { AuthContext } from "../../shared/context/auth-context";
 import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./ListItem.css";
@@ -10,13 +11,18 @@ import "./ListItem.css";
 //This component displays a list item containing a particular item from a to do list
 //This component receives its data through properties
 const ListItem = (props) => {
+  const auth = useContext(AuthContext);
   const { sendRequest } = useHttp();
   //This function is responsible for deleting items from the list
   const deleteItemHandler = async () => {
     try {
       await sendRequest(
         `http://localhost:5000/api/todolist/${props.id}`,
-        "DELETE"
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       //onDelete function called here and executed in parent component, passing the item id as an argument
       //This is used to update the user interface

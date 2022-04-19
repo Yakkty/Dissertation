@@ -4,6 +4,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 
+import Button from "../../shared/components/FormElements/Button";
+import Card from "../../shared/components/UIElements/Card";
 import PostList from "../components/PostList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
@@ -30,6 +32,17 @@ const UserPosts = () => {
     fetchPosts();
   }, [sendRequest, userId]);
 
+  if (!posts) {
+    return (
+      <div className="post-list center">
+        <Card>
+          <h2>No Posts found. Create a new one</h2>
+          <Button to="/posts/new">Add new</Button>
+        </Card>
+      </div>
+    );
+  }
+
   //Handler function for removing posts from the post data state
   //This function is for re-rendering the ui
   const deletePostHandler = (deletedPostId) => {
@@ -41,7 +54,8 @@ const UserPosts = () => {
   //This displays the post list component, passing the users posts and relevant functions to it
   return (
     <Fragment>
-      {error && <ErrorModal error={error} onClear={clearError} />}
+      {error && posts && <ErrorModal error={error} onClear={clearError} />}
+
       {posts && <PostList items={posts} onDeletePost={deletePostHandler} />}
     </Fragment>
   );

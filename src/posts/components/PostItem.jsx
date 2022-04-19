@@ -1,16 +1,18 @@
 //This component displays an individual post to be displayed in the post list parent component
 
 //Imports
-import React from "react";
+import React, { useContext } from "react";
 
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 
+import { AuthContext } from "../../shared/context/auth-context";
 import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./PostItem.css";
 
 const PostItem = (props) => {
+  const auth = useContext(AuthContext);
   const { sendRequest } = useHttp();
   //Handler function for deleting posts
   const confirmDeleteHandler = async () => {
@@ -18,7 +20,11 @@ const PostItem = (props) => {
     try {
       await sendRequest(
         `http://localhost:5000/api/posts/${props.id}`,
-        "DELETE"
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       props.onDelete(props.id);
     } catch (err) {
@@ -34,7 +40,7 @@ const PostItem = (props) => {
     <li className="post-item">
       <Card className="post-item__content">
         <div className="post-item__image">
-          <img src={props.image} alt={props.title} />
+          <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
         </div>
         <div className="post-item__data">
           <h2>{props.title}</h2>

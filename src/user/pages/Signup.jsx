@@ -65,7 +65,7 @@ const Signup = () => {
 
       //Once this request completes, a user will be logged in, passing the users ID and token
 
-      auth.login(responseData.user.id);
+      auth.login(responseData.userId, responseData.token);
     } catch (err) {
       //If this fails, the error is logged to the console
       console.log(err);

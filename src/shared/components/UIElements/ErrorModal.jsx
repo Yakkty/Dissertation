@@ -1,3 +1,5 @@
+//Component for displaying error modals, using the previously created modal
+
 import React from "react";
 
 import Modal from "./Modal";

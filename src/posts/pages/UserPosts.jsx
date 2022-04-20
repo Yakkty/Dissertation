@@ -12,18 +12,25 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { useHttp } from "../../shared/components/hooks/http-hook";
 
 const UserPosts = () => {
+   //Gain access to our custom useHttp hook methods
   const { sendRequest, error, clearError } = useHttp();
   //useState call to store posts
   const [posts, setPosts] = useState();
   //get user id from url parameters
   const userId = useParams().uid;
 
+  //Use effect call to display all posts correlating to a user
   useEffect(() => {
     const fetchPosts = async () => {
+      //http GET request sent to the rest api backend to retreive all posts for a specific user
+      //This is using the fetch api
       try {
         const responseData = await sendRequest(
+          //Dynamically set url to only fetch posts for a specific user id
+          //Url also set to an environment variable as this is production code
           `${process.env.REACT_APP_API_URL}/posts/user/${userId}`
         );
+        //Store these posts into state
         setPosts(responseData.userPosts);
       } catch (err) {
         console.log(err);
@@ -32,6 +39,7 @@ const UserPosts = () => {
     fetchPosts();
   }, [sendRequest, userId]);
 
+  //Display a card if no posts are found, allowing users to be redirected to the new posts page
   if (!posts) {
     return (
       <div className="post-list center">
@@ -52,6 +60,7 @@ const UserPosts = () => {
   };
 
   //This displays the post list component, passing the users posts and relevant functions to it
+  //Error modal is displayed if errors are present
   return (
     <Fragment>
       {error && posts && <ErrorModal error={error} onClear={clearError} />}

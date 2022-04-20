@@ -16,7 +16,9 @@ import "./PostForm.css";
 //This component renders a form containing post data
 //This component then takes user inputs to update the existing post data
 const UpdatePost = () => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+  //Gain access to our custom useHttp hook methods
   const { sendRequest, error, clearError } = useHttp();
   //useState call to initialise post data
   const [postData, setPostData] = useState({
@@ -28,13 +30,18 @@ const UpdatePost = () => {
 
   const history = useHistory();
 
-  //This useEffect call renders post data on page load
+  //This useEffect call renders post data on page load, or when its dependancies change
   useEffect(() => {
     const fetchPost = async () => {
+      //function call using the fetch api to send a GET request to our rest api backend
+      //Dynamically set url to only fetch the post with the correct post id
+      //This will fill out the form with the correct post data
       try {
         const responseData = await sendRequest(
+          //Url set to environment variable as this is production code
           `${process.env.REACT_APP_API_URL}/posts/${postId}`
         );
+        //Store this response data into state
         setPostData({
           title: responseData.post.title,
           description: responseData.post.description,
@@ -74,14 +81,22 @@ const UpdatePost = () => {
   const submitHandler = async (event) => {
     //event prevent default prevents page reload on form submission
     event.preventDefault();
+    //Send a http PATCH request to our rest api backend using the fetch api
+    //Dynamically set url to only update the post with the correct post id
     try {
       await sendRequest(
+        //Url set to environment variable due to this being production code
         `${process.env.REACT_APP_API_URL}/posts/${postId}`,
         "PATCH",
+        //Convert data into json as this is what the backend requires
+        //Provide the user inputted data, which is stored into state, to the request body
         JSON.stringify({
           title: postData.title,
           description: postData.description,
         }),
+        //Set headers, app/json to notify the backend to expect json data
+        //Auth header set for security reasons, only users with valid tokens can send these requests
+        //Therefore the token is passed
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
@@ -94,9 +109,10 @@ const UpdatePost = () => {
     }
   };
 
-  //HTML markup of the form, consisting of two inputs
+  //HTML markup of the form, consisting of two inputs and a submit button
   //Value is set to the post data state, with its onChange to functions that update the state which updates the values
   //This is known as two way binding
+  //Error modal displayed if errors are present
   return (
     <Fragment>
       {error && <ErrorModal error={error} onClear={clearError} />}

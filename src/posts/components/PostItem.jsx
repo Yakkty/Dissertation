@@ -12,20 +12,28 @@ import { useHttp } from "../../shared/components/hooks/http-hook";
 import "./PostItem.css";
 
 const PostItem = (props) => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+  //Gain access to the sendrequest method from our custom useHttp hook
   const { sendRequest } = useHttp();
+
   //Handler function for deleting posts
+  //This function uses the fetch api to call a DELETE request to our rest api backend
+  //The url contains a dynamic segment, passing the post id to correctly identify which post to delete
   const confirmDeleteHandler = async () => {
-    //on delete function called here but executed in parent component, passing the post id as a parameter
     try {
       await sendRequest(
+        //Environment variable for the url as this is production code.
         `${process.env.REACT_APP_API_URL}/posts/${props.id}`,
         "DELETE",
         null,
+        //An authorization header is set, passing the token. This is an added step of security.
+        //Only users with a token are able to send these http requests
         {
           Authorization: "Bearer " + auth.token,
         }
       );
+      //on delete function called here but executed in parent component, passing the post id as a parameter
       props.onDelete(props.id);
     } catch (err) {
       console.log(err);

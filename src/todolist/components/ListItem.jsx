@@ -11,15 +11,23 @@ import "./ListItem.css";
 //This component displays a list item containing a particular item from a to do list
 //This component receives its data through properties
 const ListItem = (props) => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+   //Gain access to our send request method from our custom useHttp hook
   const { sendRequest } = useHttp();
+
   //This function is responsible for deleting items from the list
+  //This function uses the fetch api to call a DELETE request to our rest api backend
+  //This url contains a dyanmical segment, passing the id of the todolist item to correctly identify what to delete
   const deleteItemHandler = async () => {
     try {
       await sendRequest(
+        //Environment variable for the url as this is production code.
         `${process.env.REACT_APP_API_URL}/todolist/${props.id}`,
         "DELETE",
         null,
+        //An authorization header is set, passing the token. This is an added step of security.
+        //Only users with a token are able to send these http requests
         {
           Authorization: "Bearer " + auth.token,
         }

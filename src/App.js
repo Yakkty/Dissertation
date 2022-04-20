@@ -57,10 +57,11 @@ const App = () => {
     //Create an expiration time one hour from token creation or set it to existing expiration date
     const tokenExpiration =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
-    //Setting the expiration date in state
+    //Storing the expiration date in state
     setTokenExpirationDate(tokenExpiration);
     //Storing the authentication token and expiration in local storage
     //This allows users to stay logged in for a duration, without having to login on every page reload
+    //userdata converted to JSON which is required for storing data in local storage
     localStorage.setItem(
       "userData",
       JSON.stringify({
@@ -81,13 +82,15 @@ const App = () => {
     localStorage.removeItem("userData");
   }, []);
 
-  //This function is used to calculate the expiration time of the token, and automatically log a user out once when the time is up
+  //This function is used to calculate the expiration time of the token, and automatically logs a user out when the time expires
   //Checking if a token exists (the user has logged in) along with there being an expiration date
   //This function will run once on page render, and any time the token, logout function or token expiration date changes
   useEffect(() => {
     if (token && tokenExpirationDate) {
+      //Calculate the duration of the token by removing the current time from the token expiration date time
       const tokenDuration =
         tokenExpirationDate.getTime() - new Date().getTime();
+      //Set logout timer
       logoutTimer = setTimeout(logout, tokenDuration);
     } else {
       //Clear the timer if there is no token or expiration date

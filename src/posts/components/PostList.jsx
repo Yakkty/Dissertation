@@ -11,6 +11,7 @@ import PostItem from "./PostItem";
 import "./PostList.css";
 
 const PostList = (props) => {
+  //if no posts found, display a box to allow users to add new posts
   if (props.items.length === 0) {
     return (
       <div className="post-list center">

@@ -17,6 +17,8 @@ import "./TDList.css";
 //This component displays the to do list, along with a form for adding new items to the list
 const TDList = (props) => {
   const auth = useContext(AuthContext);
+
+  //Gain access to our custom useHttp hook methods
   const { sendRequest, error, clearError } = useHttp();
 
   //useState calls for storing user input
@@ -32,30 +34,34 @@ const TDList = (props) => {
     //prevent default stops page reload on form submission
     event.preventDefault();
 
+    //Calling the fetch api to send a POST request to our REST api backend
     try {
       const responseData = await sendRequest(
         process.env.REACT_APP_API_URL + "/todolist",
         "POST",
+        //JSON.stringify as the backend needs data in json format
+        //Passing the creator and the description in the body
         JSON.stringify({
           description: item,
           creator: auth.userId,
         }),
+        //Headers set here, content type to app/json so the backend knows to parse json data
+        //Auth headers set, providing the token. Only users holding a token can send this http request
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
         }
       );
 
+      //Function to store the response data. This is called here but executes in its parent component
+      //The response data is passed back as an argument
       props.onAddItem(responseData.TDItem);
+
+      //Clear user input
       setItem("");
     } catch (err) {
       console.log(err);
     }
-
-    //Function to store the response data. This is called here but executes in its parent component
-    //The response data is passed back as an argument
-
-    //Clear user input
   };
 
   //This is the markup of the to do list component, displaying a title, individual list items and a form

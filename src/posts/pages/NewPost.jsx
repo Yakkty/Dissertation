@@ -17,7 +17,9 @@ import "./PostForm.css";
 //This component displays a form for adding new posts and storing user inputs into state
 //This component will then send a POST request to the backend to store this new post
 const NewPost = () => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+  //Gain access to our custom useHttp hook methods
   const { sendRequest, error, clearError } = useHttp();
 
   //useState calls for storing user inputs into state
@@ -53,6 +55,8 @@ const NewPost = () => {
     //prevent default stops page reload on form submission
     event.preventDefault();
 
+    //Using the fetch api to send a http POST request to our rest api backend, this time passing form data
+    //form data is used here to be able to send images along with text
     try {
       const formData = new FormData();
       formData.append("title", enteredTitle);
@@ -60,9 +64,12 @@ const NewPost = () => {
       formData.append("image", enteredImage.value);
       formData.append("creator", auth.userId);
       await sendRequest(
+        //Url set to environment variable as this is production code
         process.env.REACT_APP_API_URL + "/posts",
         "POST",
         formData,
+        //An authorization header is set, passing the token. This is an added step of security.
+        //Only users with a token are able to send these http requests
         {
           Authorization: "Bearer " + auth.token,
         }
@@ -76,8 +83,8 @@ const NewPost = () => {
     }
   };
 
-  //This displays the markup of the form, containing two input elements and a submit button
-
+  //This displays the markup of the form, containing two input elements, an image upload component and a submit button
+  //Error modal is displayed if errors are present
   return (
     <Fragment>
       {error && <ErrorModal error={error} onClear={clearError} />}

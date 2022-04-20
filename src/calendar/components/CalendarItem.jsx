@@ -11,16 +11,22 @@ import { useHttp } from "../../shared/components/hooks/http-hook";
 
 import "./CalendarItem.css";
 
-//This component
+//This component represents a specific item in the calendar
 const CalendarItem = (props) => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+  //Gain access to our send request method from our custom useHttp hook
   const { sendRequest } = useHttp();
+
+  //Handler function for deleting calendar items
   const confirmDeleteHandler = async () => {
     try {
+      //This sends a http DELETE request to our rest api backend, passing the item id as a parameter to the url
       await sendRequest(
         `${process.env.REACT_APP_API_URL}/calendar/${props.id}`,
         "DELETE",
         null,
+        //Auth headers set as only token holding users are able to send this http request
         {
           Authorization: "Bearer " + auth.token,
         }

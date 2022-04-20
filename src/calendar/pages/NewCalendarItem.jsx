@@ -16,7 +16,9 @@ import "./Calendar.css";
 //This component displays a form, stores user inputs into state
 // then sends a POST request to the backend for saving new calendar items
 const NewCalendarItem = () => {
+  //Gain access to our auth context
   const auth = useContext(AuthContext);
+  //Gain access to our custom useHttp hook methods
   const { sendRequest, error, clearError } = useHttp();
 
   //useState calls for storing user inputs
@@ -50,9 +52,14 @@ const NewCalendarItem = () => {
     //prevent default to stop page reload on form submission
     event.preventDefault();
     try {
+      //Send a http POST request to our rest api backend
       await sendRequest(
+        //Url set to environment variable as this is production code
         process.env.REACT_APP_API_URL + "/calendar",
         "POST",
+        //Convert data to json as thats what is required by our backend
+        //Pass the data stored in state to the request body
+        //Get the user id from our auth context and pass that as the value for the creator field
         JSON.stringify({
           title: enteredTitle,
           description: enteredDescription,
@@ -60,6 +67,9 @@ const NewCalendarItem = () => {
           time: enteredTime,
           creator: auth.userId,
         }),
+        //Setting headers, content type is set to json to notify the backend that json data is being sent
+        //Providing user token in the auth header
+        //This added security step is to prevent unauthenticated users from sending http requests
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
